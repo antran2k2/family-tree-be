@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách nhân viên</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+    <!--css-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!--js-->
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+
+<body>
+    <th:block th:include="/sidebar"></th:block>
+
+    <!-- Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Log Out</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+                </div>
+                <div class="modal-body">
+                    <p><i class="fa fa-question-circle"></i> Are you sure you want to log-off? <br /></p>
+                </div>
+                <div class="modal-footer">
+
+                    <form th:action="@{/logout}" method="post">
+                        <input class="btn btn-default btn-primary" type="submit" value="Sign Out" />
+                        <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content">
+
+        <h1>Danh sách nhân viên</h1>
+
+
+
+
+        <div class="row g3">
+            <div class="col-md-6">
+                <label for="myInput" class="form-label" aria-placeholder="Nhập tên">Lọc theo tên</label>
+                <input type="input" class="form-control" id="myInput">
+            </div>
+
+            <div class="col-md-6">
+                <label for="filterSelect" class="form-label">Lọc theo phòng ban</label>
+                <select name="id" class="form-control" id="filterSelect">
+            
+                    <option value=""> All</option>
+                    
+                    <option th:each="department : ${listDepartment}" th:value="*{department.getName()}" th:text="*{department.getName()}"
+                    
+                    ></option>
+                </select>
+            </div>
+        </div>
+
+
+        <script>
+            $(document).ready(function() {
+
+                $("#filterSelect").change(function() {
+                    // alert("The text has been changed.");
+                    // var selectVal = $("#filterSelect option:selected").val();
+                    var value = $(this).val().toLowerCase();
+                    // alert(value);
+                    $("#myTable tr").filter(function() {
+                        $(this).toggle($(this).find("td:nth-child(2)").text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
+
+
+
+
+        <script>
+            $(document).ready(function() {
+                $("#myInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $("#myTable tr").filter(function() {
+                        $(this).toggle($(this).find("td:first-child").text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
+        <table class="table table-fit">
+            <thead>
+                <tr>
+                    <th scope="col">Tên nhân viên</th>
+                    <!-- <th scope="col">Email</th> -->
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Số phương tiện</th>
+                    <!-- <th scope="col">Số </th>
+                    <th scope="col">Số </th> -->
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                <tr th:each="e : ${listEmployee}">
+
+
+                    <!-- <td th:text="${e.getAppUser().getUsername()}"></td> -->
+                    <td th:text="*{e.getName()}"></td>
+                    <!-- <td th:text="*{e.getEmail()}"></td> -->
+                    <td th:text="*{e.getDepartment().getName()}"></td>
+                    <td th:text="*{e.getListVehicle().size()}"></td>
+                    <td class="delete">
+
+                        <form id="deleteEmployee" th:action="@{/deleteEmployee/{id}(id=*{e.getId()})}" method="post">
+                            <input class="btn btn-danger" type="submit" value="Delete" />
+
+                        </form>
+                    </td>
+                    <td class="edit">
+                        <form th:action="@{/editEmployee}" method="post">
+                            <input type="hidden" name="id" th:value="*{e.getId()}">
+                            <input class="btn btn-secondary" type="submit" value="Edit" />
+
+
+                        </form>
+
+
+                    </td>
+
+
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#form">
+            Thêm nhân viên
+          </button>
+    </div>
+
+    <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm nhân viên</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <form th:action="@{/addEmployee}" th:object="${employee}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Tên nhân viên</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên nhân viên" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Tài khoản</label>
+                            <input type="text" name="username" class="form-control" id="username" placeholder="Nhập tài khoản" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cccd">Căn cước công dân</label>
+                            <input type="text" th:field="*{cccd}" class="form-control" id="cccd" placeholder="CCCD" pattern="[0-9]{12}" title="Nhập đúng 12 số cccd" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="department">Phòng ban:</label>
+                            <select class="form-control" id="department" th:field="*{department}">
+
+
+                                <option th:each="department : ${listDepartment}" th:value="${department.getId()}" th:text="${department.getName()}"></option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>

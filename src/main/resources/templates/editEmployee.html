@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách nhân viên</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+    <!--css-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!--js-->
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+
+<body>
+
+    <th:block th:include="/sidebar"></th:block>
+
+    <div class="content">
+
+
+        <div>
+
+            <button class="btn btn-info" onclick="history.back()">Quay lại</buttton>
+        </div>
+    
+            <h1>Sửa thông tin nhân viên</h1>
+    
+            <div>
+                <form th:action="@{/editEmployee/{id}(id=${employee.getId()})}" th:object="${employee}" method="post">
+                    <div class="form-group">
+                        <label for="name">Tên nhân viên</label>
+                        <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên nhân viên" required>
+    
+                    </div>
+                    <div class="form-group">
+                        <label for="uname">Username</label>
+                        <input type="text" name="username" class="form-control" id="uname" th:value="${employee.getAppUser().getUsername()}" readonly>
+    
+                    </div>
+                    <div class="form-group" th:if="${#strings.contains(role, 'ROLE_ADMIN')}">
+                        <label for="pass">Password</label>
+                        <input type="password" name="password" class="form-control" id="uname">
+    
+                    </div>
+                    <div class="form-group">
+                        <label for="cccd">Căn cước công dân</label>
+                        <input type="text" th:field="*{cccd}" class="form-control" id="cccd" pattern="[0-9]{12}" title="Nhập đúng 12 số cccd" placeholder="CCCD" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" th:field="*{email}" class="form-control" id="email" pattern="[\w\.]+@([\w-]+\.)+[\w-]{2,4}" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="chucVu">Chức vụ</label>
+                        <input type="text" th:field="*{chucVu}" class="form-control" id="chucVu" placeholder="Chức vụ">
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Ngày sinh</label>
+                        <input type="date" th:field="*{dob}" class="form-control" id="dob" placeholder="Ngày sinh">
+                    </div>
+                    <div class="form-group">
+                        <label for="phongBan">Phòng ban:</label>
+                        <select class="form-control" id="phongBan" th:field="*{department}">
+            
+            
+                            <option th:each="phongBan : ${phongBanList}" th:value="${phongBan.getId()}" th:text="${phongBan.getName()}"></option>
+                        </select>
+                    </div>
+    
+                    <div class="border-top-0 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success">Submit</button>
+        </div>
+        </form>
+        <label for="">Danh sách Phương tiện</label>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Biển số</th>
+                    <th scope="col">Hãng</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="v : ${employee.getListVehicle()}">
+                    <td th:text="*{v.getBien_so()}"></td>
+                    <td th:text="*{v.getHang_xe()}"></td>
+                    <!-- <input type="hidden" name="id" form="edit-form" th:value="*{e.getId()}"> -->
+
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    </div>
+
+
+
+
+
+
+
+</body>
+
+</html>

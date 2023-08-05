@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách phòng ban</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--css-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!--js-->
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+
+<body>
+    <div id="mySidenav" class="sidenav">
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Clients</a>
+        <a href="#">Contact</a>
+    </div>
+    <script>
+        function myFunction(x) {
+            var index = x.closest('tr').rowIndex;
+            document.querySelector(".modal-content").setAttribute()
+
+        }
+    </script>
+    <select>
+        <option th:each="i : ${#numbers.sequence(0, 100)}" th:value="${i}" th:text="${i}">
+        </option>
+    </select>
+
+
+    <table>
+        <thead>
+            <tr>
+                <th> Title </th>
+                <th> Author </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <tr th:each="i : ${#numbers.sequence(0, 100)}">
+                <td>
+                    <input data-toggle="modal" data-target="#test" class="btn btn-secondary" type="submit" value="Edit" onclick="myFunction(this)" />
+                </td>
+                <td><span th:text="'hàng'+ ${i}"> Title </span></td>
+                <td><span th:text="${i}"> Author </span></td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#test">Small modal</button>
+
+    <div id="test" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                ...
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

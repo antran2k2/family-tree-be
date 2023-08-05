@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách phòng ban</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!--css-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!--js-->
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+
+<body>
+
+    <th:block th:include="/sidebar"></th:block>
+
+
+
+    <script>
+        function funcEdit(x) {
+            // let index = x.closest("tr").rowIndex;
+            alert(x);
+        }
+    </script>
+
+
+    <div class="content">
+
+        <h1>Danh sách phòng ban</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Vị trí</th>
+                    <th scope="col">Số lượng nhân viên</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="department : ${listDepartment}">
+
+                    <td th:text="*{department.getName()}"></td>
+                    <td th:text="*{department.getVi_tri()}"></td>
+                    <td th:text="*{department.getListEmployee().size()}"></td>
+                    <td class="delete" th:if="${#strings.contains(role, 'ROLE_ADMIN')}">
+
+                        <form th:action="@{/deleteDepartment/{id}(id=*{department.getId()})}" method="post">
+                            <button class="btn btn-danger" type="submit" onsubmit="return false">Delete</button>
+                        </form>
+                    </td>
+                    <td class="edit" th:if="${#strings.contains(role, 'ROLE_ADMIN')}">
+                        <form th:action="@{/editDepartment}" method="get">
+                            <input type="hidden" name="id" th:value="*{department.getId()}">
+                            <!-- <input type="hidden" name="id" th:value="*{e.getId()}"> -->
+                            <input class="btn btn-secondary" type="submit" value="Edit" />
+
+
+                        </form>
+
+
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <button th:if="${#strings.contains(role, 'ROLE_ADMIN')}" type="button" class="btn btn-success" data-toggle="modal" data-target="#form">
+            Thêm phòng ban
+          </button>
+    </div>
+
+
+
+
+    <!-- <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm phòng ban</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <form th:action="@{/addDepartment}" th:object="${department}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Tên phòng ban</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên phòng ban" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vi_tri">Vị trí</label>
+                            <input type="text" th:field="*{vi_tri}" class="form-control" id="vi_tri" placeholder="Vị trí" pattern="[A-Za-z0-9]{5}" title="Nhập đúng tên" required>
+                            <p class="alert alert-danger" th:if="${#fields.hasErrors('vi_tri')}" th:errors="*{vi_tri}"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div> -->
+
+
+    <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm phòng ban</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+                </div>
+                <form th:action="@{/addDepartment}" th:object="${department}" method="post">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="name">Tên phòng ban</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nhập tên phòng ban" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="vi_tri">Vị trí</label>
+                            <input type="text" th:field="*{vi_tri}" class="form-control" id="vi_tri" placeholder="Vị trí" pattern="[A-Za-z0-9]{5}" title="Nhập đúng tên" required>
+                            <p class="alert alert-danger" th:if="${#fields.hasErrors('vi_tri')}" th:errors="*{vi_tri}"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-top-0 d-flex justify-content-center">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

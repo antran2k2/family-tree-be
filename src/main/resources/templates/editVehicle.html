@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách nhân viên</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+
+
+    <!--css-->
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
+    <link th:href="@{/css/main.css}" rel="stylesheet" />
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!--js-->
+    <script th:src="@{/js/bootstrap.js}"></script>
+</head>
+
+<body>
+
+    <th:block th:include="/sidebar"></th:block>
+    <div class="content">
+
+        <a href="/vehicle" class="btn btn-info"> Quay lại</a>
+
+        <h1>Sửa thông tin xe</h1>
+
+
+
+        <form th:action="@{/editVehicle/{id}(id=${vehicle.getId()})}" th:object="${vehicle}" method="post" id="edit">
+            <div class="form-group">
+                <label for="bien_so">Biển số</label>
+                <input type="text" th:field="*{bien_so}" class="form-control" id="bien_so" placeholder="Nhập biển số" title="Định dạng XX-YX-XXXXX hoặc XX-Y-XXXXX" pattern="[0-9]{2}-[A-Za-z][0-9]?-[0-9]{4,5}" required>
+            </div>
+            <div class="form-group">
+                <label for="hang_xe">Hãng xe</label>
+                <input type="text" th:field="*{hang_xe}" class="form-control" id="hang_xe" placeholder="Hãng xe" title="Nhập đúng tên" required>
+            </div>
+            <div class="form-group">
+                <label for="cccd">CCCD chủ xe</label>
+                <input type="text" name="cccd" class="form-control" id="cccd" placeholder="CCCD" required th:value="${vehicle.getEmployee().getCccd()}">
+            </div>
+
+
+
+
+
+            <div class="border-top-0 d-flex justify-content-center">
+                <button type="submit" class="btn btn-success" form="edit">Submit</button>
+            </div>
+    </div>
+
+
+
+
+</body>
+
+</html>
